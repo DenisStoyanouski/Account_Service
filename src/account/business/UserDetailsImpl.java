@@ -1,11 +1,14 @@
 package account.business;
 
 import jakarta.persistence.*;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.List;
+
+@NoArgsConstructor
 @Entity(name = "user_detail")
 public class UserDetailsImpl implements UserDetails {
     @Id
@@ -19,8 +22,8 @@ public class UserDetailsImpl implements UserDetails {
             generator = "user_detail_id_seq"
     )
     private Long id;
-    private final String username;
-    private final String password;
+    private String username;
+    private String password;
 
     private boolean accountNonExpired;
 

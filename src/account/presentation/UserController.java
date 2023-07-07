@@ -40,10 +40,10 @@ public class UserController {
         userRepository.save(user);
         return ResponseEntity.ok(user);
     }
-    @GetMapping("/api/empl/payment/")
+    @GetMapping("/api/empl/payment")
     public ResponseEntity<Object> testAuthentication(Authentication auth) {
         if (userDetailsRepository.findByUsername(auth.getName()).isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            throw new WrongAuthException("");
         }
         return ResponseEntity.ok().body(userRepository.findByEmail(auth.getName()));
     }

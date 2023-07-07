@@ -1,6 +1,7 @@
 package account.business;
 
 import account.persistance.UserDetailsRepository;
+import account.persistance.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,17 +13,16 @@ import java.util.NoSuchElementException;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
-    UserDetailsRepository userDetailsRepository;
+    UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserDetails userDetails;
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user;
         try {
-            userDetails = userDetailsRepository.findByUsername(email).orElseThrow();
+            user = userRepository.findByEmail(username).orElseThrow();
         } catch (NoSuchElementException e) {
-            throw new UsernameNotFoundException("Not found: " + email);
+            throw new UsernameNotFoundException("Not found: " + username);
         }
-        return userDetails;
+        return new UserDetailsImpl(user);
     }
-
 }

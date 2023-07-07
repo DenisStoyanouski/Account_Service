@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -47,6 +48,21 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(WrongAuthException.class)
+    public ResponseEntity<CustomErrorMessage> handleWrongAuthException(
+            WrongAuthException e,
+            WebRequest request) {
+
+        var body = CustomErrorMessage.builder()
+                .timestamp(LocalDateTime.now())
+                .message(e.getMessage())
+                .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
+                .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .path(request.getDescription(false).replace("uri=", ""))
+                .build();
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
@@ -57,9 +73,10 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("timestamp", LocalDateTime.now());
         body.put("status", status.value());
-        body.put("error", status.toString().replaceAll("400 ", ""));
-        body.put("message", ex.getMessage());
-        body.put("getDescription", request.getDescription(false));
+        body.put("error", HttpStatus.BAD_REQUEST.getReasonPhrase());
+        body.put("path", request.getDescription(false).replace("uri=", ""));
         return new ResponseEntity<>(body, headers, status);
     }
+
+
 }
