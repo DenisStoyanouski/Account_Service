@@ -1,6 +1,5 @@
 package account.business;
 
-import account.persistance.UserDetailsRepository;
 import account.persistance.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

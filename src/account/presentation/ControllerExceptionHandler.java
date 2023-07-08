@@ -49,7 +49,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler({ AuthenticationException.class })
+    @ExceptionHandler({AuthenticationException.class})
     public ResponseEntity<CustomErrorMessage> handleAuthentication(
             AuthenticationException e,
             HttpServletRequest request) {

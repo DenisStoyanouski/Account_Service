@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class UserDetailsImpl implements UserDetails {
 
 
     @Override
-    public List<GrantedAuthority> getAuthorities(){
+    public List<GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role.toString())));
         return authorities;
@@ -70,6 +71,7 @@ public class UserDetailsImpl implements UserDetails {
     public boolean isAccountNonExpired() {
         return accountNonExpired;
     }
+
     @Override
     public boolean isAccountNonLocked() {
         return accountNonLocked;

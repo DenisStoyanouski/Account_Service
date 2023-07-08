@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -30,8 +29,8 @@ public class SecurityConfig {
                 .csrf().disable().headers().frameOptions().disable() // for Postman, the H2 console
                 .and()
                 .authorizeHttpRequests()// manage access
-                .requestMatchers(HttpMethod.POST,"/api/auth/signup/**").permitAll()
-                .requestMatchers(HttpMethod.GET,"/api/empl/payment/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/signup/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/empl/payment/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/actuator/shutdown/**").permitAll()
                 .anyRequest().authenticated()
                 // other matchers
