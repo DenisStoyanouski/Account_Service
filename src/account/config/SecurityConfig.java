@@ -25,7 +25,7 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain SecurityFilterChain(HttpSecurity http) throws Exception {
         http.httpBasic()
-                //.authenticationEntryPoint(restAuthenticationEntryPoint) // Handle auth error
+                .authenticationEntryPoint(restAuthenticationEntryPoint) // Handle auth error
                 .and()
                 .csrf().disable().headers().frameOptions().disable() // for Postman, the H2 console
                 .and()

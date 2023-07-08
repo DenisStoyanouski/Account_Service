@@ -1,5 +1,6 @@
 package account.presentation;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -48,17 +49,17 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(WrongAuthException.class)
-    public ResponseEntity<CustomErrorMessage> handleWrongAuthException(
-            WrongAuthException e,
-            WebRequest request) {
+    @ExceptionHandler({ AuthenticationException.class })
+    public ResponseEntity<CustomErrorMessage> handleAuthentication(
+            AuthenticationException e,
+            HttpServletRequest request) {
 
         var body = CustomErrorMessage.builder()
                 .timestamp(LocalDateTime.now())
-                .message(e.getMessage())
+                .message("")
                 .error(HttpStatus.UNAUTHORIZED.getReasonPhrase())
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
-                .path(request.getDescription(false).replace("uri=", ""))
+                .path(request.getServletPath())
                 .build();
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }

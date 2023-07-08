@@ -43,7 +43,7 @@ public class UserController {
     @GetMapping("/api/empl/payment")
     public ResponseEntity<Object> testAuthentication(Authentication auth) {
         if (userDetailsRepository.findByUsername(auth.getName()).isEmpty()) {
-            throw new WrongAuthException("");
+            throw new UsernameNotFoundException("Not found");
         }
         return ResponseEntity.ok().body(userRepository.findByEmail(auth.getName()));
     }
