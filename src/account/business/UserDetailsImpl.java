@@ -22,6 +22,7 @@ public class UserDetailsImpl implements UserDetails {
             generator = "user_detail_id_seq"
     )
     private Long id;
+    @Column(unique = true)
     private String username;
     private String password;
 

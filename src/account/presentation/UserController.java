@@ -33,7 +33,7 @@ public class UserController {
     @PostMapping("/api/auth/signup")
     public ResponseEntity<Object> addNewUser(@Valid @RequestBody User user) {
         user.setPassword(encoder.encode(user.getPassword()));
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+        if (userRepository.findByEmailIgnoreCase(user.getEmail()).isPresent()) {
             throw new UsernameIsOccupiedException("User exist!");
         }
         userDetailsRepository.save(new UserDetailsImpl(user));
@@ -42,9 +42,9 @@ public class UserController {
     }
     @GetMapping("/api/empl/payment")
     public ResponseEntity<Object> testAuthentication(Authentication auth) {
-        if (userDetailsRepository.findByUsername(auth.getName()).isEmpty()) {
+        if (userDetailsRepository.findByUsernameIgnoreCase(auth.getName()).isEmpty()) {
             throw new UsernameNotFoundException("Not found");
         }
-        return ResponseEntity.ok().body(userRepository.findByEmail(auth.getName()));
+        return ResponseEntity.ok().body(userRepository.findByEmailIgnoreCase(auth.getName()));
     }
 }

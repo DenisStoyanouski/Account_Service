@@ -1,5 +1,6 @@
 package account.presentation;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class CustomErrorMessage {
 
     public CustomErrorMessage(
             LocalDateTime timestamp,
+            @JsonProperty(value = "status")
             int statusCode,
             String error,
             String message,
