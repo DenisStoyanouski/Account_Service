@@ -31,7 +31,10 @@ public class UserController {
     @PostMapping("/api/auth/signup")
     public ResponseEntity<Object> addNewUser(@Valid @RequestBody User user) {
         if (breachedPassword.isBreached(user.getPassword())) {
-         throw new PasswordBreachedException("The password is in the hacker's database!");
+            throw new PasswordException("The password is in the hacker's database!");
+        }
+        if (user.getPassword().length() < 12) {
+            throw new PasswordException("The password length must be at least 12 chars!");
         }
         user.setPassword(encoder.encode(user.getPassword()));
         if (userRepository.findByEmailIgnoreCase(user.getEmail()).isPresent()) {

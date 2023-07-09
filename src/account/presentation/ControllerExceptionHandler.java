@@ -65,16 +65,16 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler({PasswordBreachedException.class})
-    public ResponseEntity<CustomErrorMessage> handlePasswordBreached(
-            PasswordBreachedException e,
+    @ExceptionHandler({PasswordException.class})
+    public ResponseEntity<CustomErrorMessage> handlePasswordException(
+            PasswordException e,
             WebRequest request) {
 
         var body = CustomErrorMessage.builder()
                 .timestamp(LocalDateTime.now())
-                .message(e.getMessage())
-                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
                 .statusCode(HttpStatus.BAD_REQUEST.value())
+                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .message(e.getMessage())
                 .path(request.getDescription(false).replace("uri=", ""))
                 .build();
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
