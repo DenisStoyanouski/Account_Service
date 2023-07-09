@@ -2,8 +2,10 @@ package account.business;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Data
@@ -31,9 +33,10 @@ public class User {
     @Column
     private String lastname;
     @Pattern(regexp = "\\w+(@acme.com)$")
-    @Column
+    @Email(message = "")
     private String email;
     @NotBlank
+    @Size(min = 12, message = "The password length must be at least 12 chars!")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, required = true)
     private String password;
 

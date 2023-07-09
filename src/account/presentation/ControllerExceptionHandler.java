@@ -21,7 +21,8 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<CustomErrorMessage> handleUsernameNotFound(
-            UsernameNotFoundException e, WebRequest request) {
+            UsernameNotFoundException e,
+            WebRequest request) {
 
         var body = CustomErrorMessage.builder()
                 .statusCode(HttpStatus.NOT_FOUND.value())
@@ -62,6 +63,21 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                 .path(request.getServletPath())
                 .build();
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler({PasswordBreachedException.class})
+    public ResponseEntity<CustomErrorMessage> handlePasswordBreached(
+            PasswordBreachedException e,
+            WebRequest request) {
+
+        var body = CustomErrorMessage.builder()
+                .timestamp(LocalDateTime.now())
+                .message(e.getMessage())
+                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .path(request.getDescription(false).replace("uri=", ""))
+                .build();
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
     @Override

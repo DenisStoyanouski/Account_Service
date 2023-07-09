@@ -1,5 +1,6 @@
 package account.presentation;
 
+import account.business.BreachedPassword;
 import account.business.User;
 import account.business.UserDetailsImpl;
 import account.persistance.UserDetailsRepository;
@@ -24,8 +25,14 @@ public class UserController {
     @Autowired
     UserDetailsRepository userDetailsRepository;
 
+    @Autowired
+    BreachedPassword breachedPassword;
+
     @PostMapping("/api/auth/signup")
     public ResponseEntity<Object> addNewUser(@Valid @RequestBody User user) {
+        if (breachedPassword.isBreached(user.getPassword())) {
+         throw new PasswordBreachedException("The password is in the hacker's database!");
+        }
         user.setPassword(encoder.encode(user.getPassword()));
         if (userRepository.findByEmailIgnoreCase(user.getEmail()).isPresent()) {
             throw new UsernameIsOccupiedException("User exist!");
