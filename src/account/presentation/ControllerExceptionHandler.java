@@ -13,8 +13,10 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @ControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
@@ -91,9 +93,11 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         body.put("timestamp", LocalDateTime.now());
         body.put("status", status.value());
         body.put("error", HttpStatus.BAD_REQUEST.getReasonPhrase());
+        body.put("message", Objects.requireNonNull(ex.getFieldError()).getDefaultMessage());
         body.put("path", request.getDescription(false).replace("uri=", ""));
         return new ResponseEntity<>(body, headers, status);
     }
+
 
 
 }

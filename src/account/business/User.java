@@ -32,11 +32,14 @@ public class User {
     @NotBlank
     @Column
     private String lastname;
-    @Pattern(regexp = "\\w+(@acme.com)$")
+    @Pattern(regexp = "\\w+(@acme.com)$", message = "The email domain must be acme.com")
     @Email(message = "")
     private String email;
     @NotBlank
     @Size(min = 12, message = "The password length must be at least 12 chars!")
+    @Pattern(
+            regexp = "(?!PasswordForJanuary|PasswordForFebruary|PasswordForMarch|PasswordForApril|PasswordForMay|PasswordForJune|PasswordForJuly|PasswordForAugust|PasswordForSeptember|PasswordForOctober|PasswordForNovember|PasswordForDecember)(\\w+)",
+            message = "The password is in the hacker's database!")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, required = true)
     private String password;
 
