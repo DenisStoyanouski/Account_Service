@@ -6,7 +6,6 @@ import account.business.UserDetailsImpl;
 import account.persistance.UserDetailsRepository;
 import account.persistance.UserRepository;
 import jakarta.validation.Valid;
-import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 @RestController
@@ -34,8 +34,7 @@ public class UserController {
     @PostMapping("/api/auth/signup")
     public ResponseEntity<Object> addNewUser(@Valid @RequestBody User user) {
         String userPassword = user.getPassword();
-        PasswordValidator pv = new PasswordValidator(userPassword);
-        pv.check();
+        PasswordValidator.check(userPassword);
         user.setPassword(encoder.encode(userPassword));
         if (userRepository.findByEmailIgnoreCase(user.getEmail()).isPresent()) {
             throw new UsernameIsOccupiedException("User exist!");
@@ -54,14 +53,21 @@ public class UserController {
     }
 
     @PostMapping("api/auth/changepass")
-    public ResponseEntity<Object> changePassword(@AuthenticationPrincipal UserDetails details, @RequestBody Map<String, String> newPassword) {
-        if (newPassword.get("new_password") == null || encoder.matches(newPassword.get("new_password"), details.getPassword())) {
+    public ResponseEntity<Object> changePassword(
+            @AuthenticationPrincipal UserDetails details,
+            @RequestBody Map<String, String> newPassword)
+    {
+        String candidate = newPassword.get("new_password");
+        PasswordValidator.check(candidate);
+        if (encoder.matches(candidate, details.getPassword())) {
             throw new PasswordException("The passwords must be different!");
         }
-
+        User user = userRepository.findByEmailIgnoreCase(details.getUsername()).orElseThrow();
+        user.setPassword(encoder.encode(candidate));
+        userRepository.save(user);
 
         Map<String, String> response = new HashMap<>();
-        response.put("email", details.getUsername());
+        response.put("email", user.getEmail().toLowerCase());
         response.put("status", "The password has been updated successfully");
         return ResponseEntity.ok(response);
     }

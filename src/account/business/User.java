@@ -2,10 +2,7 @@ package account.business;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.awt.*;
@@ -34,6 +31,7 @@ public class User {
     @NotBlank
     @Column
     private String lastname;
+    @NotBlank
     @Pattern(regexp = "\\w+(@acme.com)$", message = "The email domain must be acme.com")
     @Email(message = "")
     private String email;
