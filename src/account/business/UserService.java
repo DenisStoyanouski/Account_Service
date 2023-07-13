@@ -35,11 +35,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public UserDetails findUserByEmail(String email) {
+    public User findUserByEmail(String email) {
         if (userDetailsRepository.findByUsernameIgnoreCase(email).isEmpty()) {
             throw new UsernameNotFoundException("Not found");
         }
-        return userDetailsRepository.findByUsernameIgnoreCase(email).get();
+        return userRepository.findByEmailIgnoreCase(email).get();
     }
 
     public User changePassword(UserDetails details, String candidate) {

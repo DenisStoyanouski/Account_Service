@@ -29,6 +29,7 @@ import java.util.Map;
 public class UserController {
 
     final private UserService userService;
+
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;

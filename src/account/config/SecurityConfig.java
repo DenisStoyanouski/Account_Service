@@ -17,7 +17,6 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     @Autowired
     RestAuthenticationEntryPoint restAuthenticationEntryPoint;
-
     @Autowired
     UserDetailsService userDetailsService;
 
