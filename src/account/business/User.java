@@ -8,6 +8,8 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.awt.*;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,10 +38,10 @@ public class User {
     @Email(message = "")
     private String email;
     @NotBlank
-    @Size(min = 12, message = "The password length must be at least 12 chars!")
+    /*@Size(min = 12, message = "The password length must be at least 12 chars!")
     @Pattern(
             regexp = "(?!PasswordForJanuary|PasswordForFebruary|PasswordForMarch|PasswordForApril|PasswordForMay|PasswordForJune|PasswordForJuly|PasswordForAugust|PasswordForSeptember|PasswordForOctober|PasswordForNovember|PasswordForDecember)(\\w+)",
-            message = "The password is in the hacker's database!")
+            message = "The password is in the hacker's database!")*/
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, required = true)
     private String password;
 
