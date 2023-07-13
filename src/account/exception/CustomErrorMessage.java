@@ -1,4 +1,4 @@
-package account.presentation;
+package account.exception;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;

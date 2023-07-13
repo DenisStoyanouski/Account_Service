@@ -1,4 +1,4 @@
-package account.presentation;
+package account.exception;
 
 public class UsernameNotFoundException extends RuntimeException {
 

@@ -1,4 +1,4 @@
-package account.presentation;
+package account.exception;
 
 public class PasswordException extends RuntimeException{
     public PasswordException(String message) {

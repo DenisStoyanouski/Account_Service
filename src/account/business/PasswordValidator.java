@@ -1,6 +1,6 @@
 package account.business;
 
-import account.presentation.PasswordException;
+import account.exception.PasswordException;
 
 import java.util.List;
 
