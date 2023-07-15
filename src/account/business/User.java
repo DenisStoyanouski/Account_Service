@@ -2,6 +2,7 @@ package account.business;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -40,6 +41,7 @@ public class User {
     @Pattern(
             regexp = "(?!PasswordForJanuary|PasswordForFebruary|PasswordForMarch|PasswordForApril|PasswordForMay|PasswordForJune|PasswordForJuly|PasswordForAugust|PasswordForSeptember|PasswordForOctober|PasswordForNovember|PasswordForDecember)(\\w+)",
             message = "The password is in the hacker's database!")*/
+    @Transient
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, required = true)
     private String password;
 

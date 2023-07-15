@@ -1,11 +1,9 @@
 package account.business;
 
-import account.exception.PasswordException;
 import account.exception.UsernameIsOccupiedException;
 import account.exception.UsernameNotFoundException;
-import account.persistance.UserDetailsRepository;
 import account.persistance.UserRepository;
-import org.springframework.security.core.userdetails.UserDetails;
+import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +12,14 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final PasswordEncoder encoder;
     private final UserRepository userRepository;
-    private final UserDetailsRepository userDetailsRepository;
+    private final CredentialsService credentialsService;
 
     public UserService(PasswordEncoder encoder,
                        UserRepository userRepository,
-                       UserDetailsRepository userDetailsRepository) {
+                       CredentialsService credentialsService) {
         this.encoder = encoder;
         this.userRepository = userRepository;
-        this.userDetailsRepository = userDetailsRepository;
+        this.credentialsService = credentialsService;
     }
 
     public void addNewUser(User user) {
@@ -31,25 +29,20 @@ public class UserService {
         if (userRepository.findByEmailIgnoreCase(user.getEmail()).isPresent()) {
             throw new UsernameIsOccupiedException("User exist!");
         }
-        userDetailsRepository.save(new UserDetailsImpl(user));
+        credentialsService.save(new Credentials(user));
         userRepository.save(user);
     }
 
     public User findUserByEmail(String email) {
-        if (userDetailsRepository.findByUsernameIgnoreCase(email).isEmpty()) {
+        if (credentialsService.findDetailsByUsername(email).isEmpty()) {
             throw new UsernameNotFoundException("Not found");
         }
         return userRepository.findByEmailIgnoreCase(email).get();
     }
 
-    public User changePassword(UserDetails details, String candidate) {
-        PasswordValidator.check(candidate);
-        if (encoder.matches(candidate, details.getPassword())) {
-            throw new PasswordException("The passwords must be different!");
-        }
-        User user = userRepository.findByEmailIgnoreCase(details.getUsername()).orElseThrow();
-        user.setPassword(encoder.encode(candidate));
-        userRepository.save(user);
-        return user;
+    @Transactional
+    public void updatePassword(String username, String pass) {
+        User user = userRepository.findByEmailIgnoreCase(username).orElseThrow();
+        user.setPassword(pass);
     }
 }

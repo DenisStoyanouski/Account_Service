@@ -1,14 +1,7 @@
 package account.presentation;
 
-import account.business.PasswordValidator;
-import account.business.User;
-import account.business.UserDetailsImpl;
-import account.business.UserService;
+import account.business.*;
 import account.exception.PasswordException;
-import account.exception.UsernameIsOccupiedException;
-import account.exception.UsernameNotFoundException;
-import account.persistance.UserDetailsRepository;
-import account.persistance.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +23,17 @@ public class UserController {
 
     final private UserService userService;
 
+    final private CredentialsService credentialsService;
+
+    final private PasswordEncoder encoder;
+
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService,
+                          CredentialsService credentialsService,
+                          PasswordEncoder encoder) {
         this.userService = userService;
+        this.credentialsService = credentialsService;
+        this.encoder = encoder;
     }
 
     @PostMapping("/api/auth/signup")
@@ -51,9 +52,16 @@ public class UserController {
             @AuthenticationPrincipal UserDetails details,
             @RequestBody Map<String, String> newPassword) {
         String candidate = newPassword.get("new_password");
-        User user = userService.changePassword(details, candidate);
+        String username = details.getUsername();
+        PasswordValidator.check(candidate);
+        if (encoder.matches(candidate, details.getPassword())) {
+            throw new PasswordException("The passwords must be different!");
+        }
+        String pass = encoder.encode(candidate);
+        credentialsService.updatePassword(username, pass);
+        userService.updatePassword(username, pass);
         Map<String, String> response = new HashMap<>();
-        response.put("email", user.getEmail().toLowerCase());
+        response.put("email", details.getUsername().toLowerCase());
         response.put("status", "The password has been updated successfully");
         return ResponseEntity.ok(response);
     }

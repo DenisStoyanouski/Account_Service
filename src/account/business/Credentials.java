@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
-@Entity(name = "user_detail")
-public class UserDetailsImpl implements UserDetails {
+@Entity(name = "credential")
+public class Credentials implements UserDetails {
     @Id
     @SequenceGenerator(
             name = "user_detail_id_seq",
@@ -39,7 +39,7 @@ public class UserDetailsImpl implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     private final List<Role> roles = new ArrayList<>();
 
-    public UserDetailsImpl(User user) {
+    public Credentials(User user) {
         username = user.getEmail();
         password = user.getPassword();
         this.accountNonExpired = true;
@@ -61,7 +61,6 @@ public class UserDetailsImpl implements UserDetails {
     public String getPassword() {
         return password;
     }
-
     @Override
     public String getUsername() {
         return username;
@@ -85,5 +84,9 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public void setPassword(String encode) {
+        this.password = encode;
     }
 }
