@@ -1,8 +1,6 @@
 package account.business;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
@@ -25,23 +23,21 @@ public class User {
             generator = "user_id_seq"
     )
     private Long id;
-    @NotBlank
+    @NotBlank(message = "The name mustn't be null, empty or blank")
     @Column
     private String name;
-    @NotBlank
+    @NotBlank(message = "The lastname mustn't be null, empty or blank")
     @Column
     private String lastname;
-    @NotBlank
+    @NotBlank(message = "The lastname mustn't be null, empty or blank")
     @Pattern(regexp = "\\w+(@acme.com)$", message = "The email domain must be acme.com")
-    @Email(message = "")
     private String email;
-    @NotBlank
+    @NotBlank(message = "The password mustn't be null, empty or blank")
     /*@Size(min = 12, message = "The password length must be at least 12 chars!")
     @Pattern(
             regexp = "(?!PasswordForJanuary|PasswordForFebruary|PasswordForMarch|PasswordForApril|PasswordForMay|PasswordForJune|PasswordForJuly|PasswordForAugust|PasswordForSeptember|PasswordForOctober|PasswordForNovember|PasswordForDecember)(\\w+)",
             message = "The password is in the hacker's database!")*/
     @Transient
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY, required = true)
     private String password;
 
 }

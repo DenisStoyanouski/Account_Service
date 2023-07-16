@@ -3,6 +3,7 @@ package account.presentation;
 import account.business.*;
 import account.exception.PasswordException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -27,16 +28,13 @@ public class UserController {
 
     final private UserDTOMapper userDTOMapper;
 
-    final private PasswordEncoder encoder;
-
     @Autowired
     public UserController(UserService userService,
                           CredentialsService credentialsService,
-                          UserDTOMapper userDTOMapper, PasswordEncoder encoder) {
+                          UserDTOMapper userDTOMapper) {
         this.userService = userService;
         this.credentialsService = credentialsService;
         this.userDTOMapper = userDTOMapper;
-        this.encoder = encoder;
     }
 
     @PostMapping("/api/auth/signup")
@@ -53,16 +51,11 @@ public class UserController {
     @PostMapping("api/auth/changepass")
     public ResponseEntity<Object> changePassword(
             @AuthenticationPrincipal UserDetails details,
-            @RequestBody Map<String, String> newPassword) {
+            @RequestBody
+            Map<String, String> newPassword) {
         String candidate = newPassword.get("new_password");
         String username = details.getUsername();
-        PasswordValidator.check(candidate);
-        if (encoder.matches(candidate, details.getPassword())) {
-            throw new PasswordException("The passwords must be different!");
-        }
-        String pass = encoder.encode(candidate);
-        credentialsService.updatePassword(username, pass);
-        userService.updatePassword(username, pass);
+        credentialsService.updatePassword(username, candidate);
         Map<String, String> response = new HashMap<>();
         response.put("email", details.getUsername().toLowerCase());
         response.put("status", "The password has been updated successfully");

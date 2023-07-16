@@ -41,10 +41,4 @@ public class UserService {
         }
         return userRepository.findByEmailIgnoreCase(email).get();
     }
-
-    @Transactional
-    public void updatePassword(String username, String pass) {
-        User user = userRepository.findByEmailIgnoreCase(username).orElseThrow();
-        user.setPassword(pass);
-    }
 }

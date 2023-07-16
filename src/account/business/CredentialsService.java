@@ -1,5 +1,6 @@
 package account.business;
 
+import account.exception.PasswordException;
 import account.persistance.CredentialsRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,17 @@ public class CredentialsService implements UserDetailsService {
     }
 
     @Transactional
-    public void updatePassword(String username, String pass) {
-        Credentials credentials = credentialsRepository.findByUsernameIgnoreCase(username).get();
-        credentials.setPassword(pass);
+    public void updatePassword(String username, String candidate) {
+        PasswordValidator.check(candidate);
+        try {
+            Credentials credentials = credentialsRepository.findByUsernameIgnoreCase(username).orElseThrow();
+            if (encoder.matches(candidate, credentials.getPassword())) {
+                throw new PasswordException("The passwords must be different!");
+            }
+            credentials.setPassword(encoder.encode(candidate));
+        } catch (NoSuchElementException e) {
+            throw new UsernameNotFoundException("Not found: " + username);
+        }
     }
 
     public void save(Credentials credentials) {
