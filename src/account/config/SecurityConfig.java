@@ -32,6 +32,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/empl/payment/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "api/auth/changepass/**").authenticated()
                 .requestMatchers(HttpMethod.POST, "/actuator/shutdown/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/acct/payments/**").permitAll()
                 .anyRequest().authenticated()
                 // other matchers
                 .and()
