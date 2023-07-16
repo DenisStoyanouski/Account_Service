@@ -1,0 +1,15 @@
+package account.business;
+
+import java.util.function.Function;
+
+public class UserDTOMapper implements Function<User, UserDTO> {
+    @Override
+    public UserDTO apply(User user) {
+        return new UserDTO(
+                user.getId(),
+                user.getName(),
+                user.getLastname(),
+                user.getEmail()
+        );
+    }
+}

@@ -4,6 +4,7 @@ import account.exception.UsernameIsOccupiedException;
 import account.exception.UsernameNotFoundException;
 import account.persistance.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final CredentialsService credentialsService;
 
+    @Autowired
     public UserService(PasswordEncoder encoder,
                        UserRepository userRepository,
                        CredentialsService credentialsService) {

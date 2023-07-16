@@ -25,26 +25,29 @@ public class UserController {
 
     final private CredentialsService credentialsService;
 
+    final private UserDTOMapper userDTOMapper;
+
     final private PasswordEncoder encoder;
 
     @Autowired
     public UserController(UserService userService,
                           CredentialsService credentialsService,
-                          PasswordEncoder encoder) {
+                          UserDTOMapper userDTOMapper, PasswordEncoder encoder) {
         this.userService = userService;
         this.credentialsService = credentialsService;
+        this.userDTOMapper = userDTOMapper;
         this.encoder = encoder;
     }
 
     @PostMapping("/api/auth/signup")
     public ResponseEntity<Object> addNewUser(@Valid @RequestBody User user) {
         userService.addNewUser(user);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(userDTOMapper.apply(user));
     }
 
     @GetMapping("/api/empl/payment")
     public ResponseEntity<Object> testAuthentication(Authentication auth) {
-        return ResponseEntity.ok().body(userService.findUserByEmail(auth.getName()));
+        return ResponseEntity.ok().body(userDTOMapper.apply(userService.findUserByEmail(auth.getName())));
     }
 
     @PostMapping("api/auth/changepass")
