@@ -22,11 +22,9 @@ import java.util.Map;
 @RestController
 public class UserController {
 
-    final private UserService userService;
-
-    final private CredentialsService credentialsService;
-
-    final private UserDTOMapper userDTOMapper;
+    private final UserService userService;
+    private final CredentialsService credentialsService;
+    private final UserDTOMapper userDTOMapper;
 
     @Autowired
     public UserController(UserService userService,

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,11 +23,19 @@ public class PaymentController {
     }
 
     @NotEmpty(message = "Shouldn't be empty")
-    @PostMapping("api/acct/payments/**")
+    @PostMapping("api/acct/payments")
     public ResponseEntity<Object> addPayments(@RequestBody List<@Valid Payment> payments) {
         paymentService.addPayments(payments);
         Map<String, String> response = new HashMap<>();
         response.put("status", "Added successfully!");
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("api/acct/payments")
+    public ResponseEntity<Object> updateSalary(@RequestBody @Valid Payment payment) {
+        paymentService.updateSalary(payment);
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "Updated successfully!");
         return ResponseEntity.ok(response);
     }
 }
