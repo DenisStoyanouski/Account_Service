@@ -19,9 +19,15 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
-    @NotEmpty(message = "Shouldn't be empty")
+    /*@NotEmpty(message = "Shouldn't be empty")
     @PostMapping("api/acct/payments/**")
     public void addPayments(@RequestBody List<@Valid Payment> payments) {
         paymentService.addPayments(payments);
+    }*/
+
+    @PostMapping("api/acct/payments/**")
+    public void addPayment(@RequestBody @Valid Payment payments) {
+        paymentService.addPayment(payments);
+
     }
 }
