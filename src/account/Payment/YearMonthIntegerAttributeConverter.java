@@ -1,13 +1,9 @@
 package account.Payment;
 
 import jakarta.persistence.AttributeConverter;
-import org.springframework.stereotype.Service;
 
 import java.time.YearMonth;
 
-
-
-@Service
 public class YearMonthIntegerAttributeConverter implements AttributeConverter<YearMonth, Integer> {
 
     @Override
