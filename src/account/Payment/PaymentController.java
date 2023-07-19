@@ -4,10 +4,10 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,5 +37,13 @@ public class PaymentController {
         Map<String, String> response = new HashMap<>();
         response.put("status", "Updated successfully!");
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/api/empl/payment")
+    public ResponseEntity<Object> testAuthentication(
+            @AuthenticationPrincipal UserDetails details,
+            @RequestParam(required = false) String period) {
+        System.out.println(period);
+        return ResponseEntity.ok().body(paymentService.getPaymentsOfCurrentUser(details.getUsername(), period));
     }
 }

@@ -4,16 +4,14 @@ import account.business.*;
 import account.exception.PasswordException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,11 +37,6 @@ public class UserController {
     public ResponseEntity<Object> addNewUser(@Valid @RequestBody User user) {
         userService.addNewUser(user);
         return ResponseEntity.ok(userDTOMapper.apply(user));
-    }
-
-    @GetMapping("/api/empl/payment")
-    public ResponseEntity<Object> testAuthentication(Authentication auth) {
-        return ResponseEntity.ok().body(userDTOMapper.apply(userService.findUserByEmail(auth.getName())));
     }
 
     @PostMapping("api/auth/changepass")
