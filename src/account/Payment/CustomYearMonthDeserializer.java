@@ -1,5 +1,6 @@
 package account.Payment;
 
+import account.exception.PeriodIsNotValidException;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -29,8 +30,7 @@ public class CustomYearMonthDeserializer extends StdDeserializer<YearMonth> {
         try {
             return YearMonth.parse(date, formatter);
         } catch (DateTimeParseException e) {
-            /*TODO add exception*/
-            throw new RuntimeException("Something is going wrong");
+            throw new PeriodIsNotValidException("Wrong period format");
         }
     }
 }

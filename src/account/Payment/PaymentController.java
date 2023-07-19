@@ -2,11 +2,14 @@ package account.Payment;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -42,8 +45,12 @@ public class PaymentController {
     @GetMapping("/api/empl/payment")
     public ResponseEntity<Object> testAuthentication(
             @AuthenticationPrincipal UserDetails details,
-            @RequestParam(required = false) String period) {
-        System.out.println(period);
-        return ResponseEntity.ok().body(paymentService.getPaymentsOfCurrentUser(details.getUsername(), period));
+            @RequestParam(required = false)
+            @Pattern(regexp = "(0[1-9]|1[0-2])-\\d{4}", message = "Wrong date format")
+            String period) {
+        if (period == null) {
+            return ResponseEntity.ok().body(paymentService.getPaymentsOfCurrentUser(details.getUsername()));
+        }
+        return ResponseEntity.ok().body(paymentService.getPaymentOfCurrentUserForPeriod(details.getUsername(), period));
     }
 }
